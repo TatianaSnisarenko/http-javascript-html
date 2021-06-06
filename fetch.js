@@ -21,6 +21,10 @@ const deleteUser = document.getElementById('delete-user');
 const deleteOrder = document.getElementById('delete-order');
 const deletePet = document.getElementById('delete-pet');
 
+const myForm = document.getElementById("myForm");
+const inpFile = document.getElementById("inpFile");
+
+
 const sendHttpRequest = (method, url, data) => {
   return fetch(url, {
     method: method,
@@ -317,6 +321,42 @@ const deletePetData = () => {
     });
 };
 
+const url = "https://petstore.swagger.io/v2/pet/1/uploadImage";
+
+document.addEventListener('DOMContentLoaded', init);
+
+function init() {
+  document.getElementById('btnSubmit').addEventListener('click', upload);
+}
+
+function upload(ev) {
+  ev.preventDefault();
+
+  let h = new Headers();
+  h.append('Accept', 'application/json');
+  let fd = new FormData();
+  fd.append('user-id', document.getElementById('pet_id').value);
+
+  let myFile = document.getElementById('avatar_img').files[0];
+  fd.append('avatar', myFile, "avatar.png");
+  let req = new Request(url, {
+    method: 'POST',
+    headers: h,
+    mode: 'no-cors',
+    body: fd
+  });
+  fetch(req)
+    .then((response) => {
+      console.log("Upload success: " + response);
+    })
+    .catch((err) => {
+      console.log('ERROR:', err.message);
+    });
+}
+
+
+
+
 
 findAvailablePet.addEventListener('click', findAvailablePetData);
 findPendingPet.addEventListener('click', findPendingPetData);
@@ -338,3 +378,6 @@ updateUser.addEventListener('click', updateUserData);
 deleteUser.addEventListener('click', deleteUserData);
 deleteOrder.addEventListener('click', deleteOrderData);
 deletePet.addEventListener('click', deletePetData);
+
+
+
